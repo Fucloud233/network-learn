@@ -4,7 +4,7 @@ def main():
     # 创建套接字
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # 绑定本机信息
-    server_socket.bind(("127.0.0.1", 12000)) 
+    server_socket.bind(("", 12000)) 
     # 重复使用绑定的信息
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # 变为被动
@@ -18,7 +18,8 @@ def main():
     
     new_socket_list = {}       
     client_address_list = {}     
-
+    
+    print("Sever is ready...")
     # 循环等待数据到达
     while True:
         # 检测并获取epoll监控的已触发事件
@@ -34,20 +35,15 @@ def main():
                 new_socket.setblocking(0)
                 epoll.register(new_socket.fileno(), select.EPOLLIN)
                 new_socket_list[new_socket.fileno()] = new_socket
-                client_address[new_socket.fileno()] = client_address
+                client_address_list[new_socket.fileno()] = client_address
             # 如果监听到EPOLLIN事件, 表示对应的文件描述符可以读
             elif event & select.EPOLLIN:
                 # 处理逻辑
                 msg = new_socket_list[fd].recv(1024).decode()
                 new_socket_list[fd].send(msg.upper().encode())
-                
                 epoll.modify(fd, select.EPOLLOUT)
                 new_socket_list.pop(fd)
-                client_address.pop(fd)
-
-                
-
-
+                client_address_list.pop(fd)
 
 if __name__ == '__main__':
     main()
