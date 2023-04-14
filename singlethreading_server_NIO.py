@@ -12,6 +12,7 @@ def singlethreading_server_BIO(ip: str, port: str):
     # 连接列表
     conn_list = []
     print('The server is ready to receive')
+    # 该循环会被不断运行
     while True:
         try:
             # setblocking被设置为非阻塞IO，收不到时会报异常
@@ -27,7 +28,10 @@ def singlethreading_server_BIO(ip: str, port: str):
             try:
                 msg = conn.recv(1024).decode()
                 conn.sendall(msg.upper().encode())
-            except Exception:
+                # 删除异常处理
+                conn.close()
+                conn_list.remove(conn)
+            except Exception: 
                 pass
 
 if __name__ == '__main__':

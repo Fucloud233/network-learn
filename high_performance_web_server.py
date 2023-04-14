@@ -28,14 +28,14 @@ def multithreading_server_BIO(ip: str, port: int):
         # print(addr)
         
         # (1) 使用多线程
-        # thread = threading.Thread(target=thread_func, args=(conn, ))
-        # threads.append(thread)
-        # thread.start()
+        thread = threading.Thread(target=thread_func, args=(conn, ))
+        threads.append(thread)
+        thread.start()
 
         # (2) 使用单线程
-        msg = conn.recv(1024).decode()
-        conn.send(msg.upper().encode())
-        conn.close()
+        # msg = conn.recv(1024).decode()
+        # conn.send(msg.upper().encode())
+        # conn.close()
 
     # 等待多线程运行完毕
     for thread in threads:
