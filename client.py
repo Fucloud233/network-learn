@@ -10,6 +10,9 @@ serverName = '127.0.0.1'
 # 服务器端口号
 serverPort = 12000
 
+# 随意定义一些数据，用于发送
+data = 'q8e7777773yr387yrx12yeemxhy120xn120ye817mexh12emh812h345435435v45v4v43v4v433v4435v3m'
+
 # 发送函数
 def send(data):
     try:
@@ -25,15 +28,15 @@ def send(data):
         # 发送任意字符串
         clientSocket.sendall(data.encode())
         # 服务器处理完所有数据，并响应，否则一直阻塞在这里
-        clientSocket.recv(1024)
+        ret_msg = clientSocket.recv(1024).decode()
+        if ret_msg != data.upper():
+            print("服务器运行错误")
         # 关闭socket
         clientSocket.close()
     except Exception as e:
         print(e)
 
 if __name__ == '__main__':
-    # 随意定义一些数据，用于发送
-    data = 'q8e7777773yr387yrx12yeemxhy120xn120ye817mexh12emh812h345435435v45v4v43v4v433v4435v3m'
     # 线程列表
     thread_list = []
     # 创建线程
