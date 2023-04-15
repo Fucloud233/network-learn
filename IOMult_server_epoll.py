@@ -1,5 +1,8 @@
 import socket
 import select
+
+# ref: http://scotdoyle.com/python-epoll-howto.html
+
 def main():
     # 创建套接字
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,8 +20,8 @@ def main():
     epoll.register(server_socket.fileno(), select.EPOLLIN)
     
     new_socket_list = {}       
-    client_address_list = {}     
-    
+    msg_queue = {}
+
     print("Sever is ready...")
     # 循环等待数据到达
     while True:
@@ -28,22 +31,27 @@ def main():
         for fd, event in epoll_list:
             # 如果有新的连接请求递达
             if fd == server_socket.fileno():
-                new_socket, client_address = server_socket.accept()
-                print('有新的客户端到来%s'%str(client_address))
+                new_socket, _ = server_socket.accept()
+                # print('有新的客户端到来%s'%str(client_address))
                 
                 # 为新套接字的文件描述符注册读事件
                 new_socket.setblocking(0)
                 epoll.register(new_socket.fileno(), select.EPOLLIN)
                 new_socket_list[new_socket.fileno()] = new_socket
-                client_address_list[new_socket.fileno()] = client_address
-            # 如果监听到EPOLLIN事件, 表示对应的文件描述符可以读
+            # 如果监听到EPOLLIN事件, 表示对应的文件可以读
             elif event & select.EPOLLIN:
-                # 处理逻辑
+                # 接收消息
                 msg = new_socket_list[fd].recv(1024).decode()
-                new_socket_list[fd].send(msg.upper().encode())
+                msg_queue[fd] = msg
                 epoll.modify(fd, select.EPOLLOUT)
+            # 如果监听到EPOLLOUT事件，表示对应的文件可以写
+            elif event & select.EPOLLOUT:
+                # 发送消息
+                ret_msg = msg_queue[fd]
+                new_socket_list[fd].send(ret_msg.upper().encode())
+                # 删除消息和socket
+                msg_queue.pop(fd)
                 new_socket_list.pop(fd)
-                client_address_list.pop(fd)
 
 if __name__ == '__main__':
     main()
