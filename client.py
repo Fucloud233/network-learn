@@ -6,7 +6,8 @@ import random
 # 线程个数
 client_thread_num = 100
 # 服务器的IP地址或主机名
-serverName = '127.0.0.1'
+# serverName = '127.0.0.1'
+serverName = '47.120.5.208'
 # 服务器端口号
 serverPort = 12000
 
