@@ -51,11 +51,11 @@ def main():
                 # 发送消息
                 ret_msg = msg_queue[fd]
                 new_socket_list[fd].send(ret_msg.upper().encode())
+                new_socket_list[fd].close()
                 # 删除消息记录
                 msg_queue.pop(fd)
                 # 关闭并删除socket
                 epoll.unregister(fd)
-                new_socket_list[fd].close()
                 new_socket_list.pop(fd)
 
 
