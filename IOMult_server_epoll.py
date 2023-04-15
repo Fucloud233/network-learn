@@ -43,15 +43,21 @@ def main():
                 # 接收消息
                 msg = new_socket_list[fd].recv(1024).decode()
                 msg_queue[fd] = msg
+               
+                # 转移给EPOLLOUT处理
                 epoll.modify(fd, select.EPOLLOUT)
             # 如果监听到EPOLLOUT事件，表示对应的文件可以写
             elif event & select.EPOLLOUT:
                 # 发送消息
                 ret_msg = msg_queue[fd]
                 new_socket_list[fd].send(ret_msg.upper().encode())
-                # 删除消息和socket
+                # 删除消息记录
                 msg_queue.pop(fd)
+                # 关闭并删除socket
+                epoll.unregister(fd)
+                new_socket_list[fd].close()
                 new_socket_list.pop(fd)
+
 
 if __name__ == '__main__':
     main()
