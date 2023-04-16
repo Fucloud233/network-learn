@@ -4,7 +4,7 @@ def singlethreading_server_BIO(ip: str, port: str):
     # 创建服务器套接字，使用IPv4协议，TCP协议
     serverSocket = socket(AF_INET, SOCK_STREAM)
     # 绑定端口号和套接字
-    serverSocket.bind(("127.0.0.1", 12000))
+    serverSocket.bind(("", 12000))
     # 设置等待连接为非阻塞
     serverSocket.setblocking(False)
     # 开启监听，设置x个连接缓冲
