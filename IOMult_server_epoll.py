@@ -27,6 +27,8 @@ def main():
     while True:
         # 检测并获取epoll监控的已触发事件
         epoll_list = epoll.poll(1)
+
+        print(len(epoll_list))
         # 对事件进行处理
         for fd, event in epoll_list:
             # 如果有新的连接请求递达

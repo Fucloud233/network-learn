@@ -26,9 +26,10 @@ def singlethreading_server_BIO(ip: str, port: str):
         # 迭代每个连接，处理每个连接
         for conn in conn_list:
             try:
+                # 处理业务逻辑
                 msg = conn.recv(1024).decode()
                 conn.sendall(msg.upper().encode())
-                # 删除异常处理
+                # 处理完后关闭 并从数组中删除
                 conn.close()
                 conn_list.remove(conn)
             except Exception: 

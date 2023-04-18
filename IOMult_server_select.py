@@ -21,6 +21,7 @@ def main():
     while True:
         # 调用select()函数，阻塞等待      
         readable, writable, _ = select.select(inputs, outputs, exception)
+        print(len(readable))
         # 数据抵达，循环
         for temp_socket in readable:
             # 监听到有新的连接
@@ -33,6 +34,7 @@ def main():
                 msg = temp_socket.recv(1024).decode()
                 # 若有数据递达，对数据进行处理
                 if msg:
+                    # 交给outputs去处理
                     outputs.append(temp_socket)
                     msg_queue[temp_socket] = msg
                     # print(msg)
@@ -42,6 +44,7 @@ def main():
                 inputs.remove(temp_socket)
         # 发送数据准备完毕
         for temp_socket in writable:
+            # 发送消息
             msg = msg_queue.get(temp_socket)
             if msg != None:
                 temp_socket.sendall(msg.upper().encode())
