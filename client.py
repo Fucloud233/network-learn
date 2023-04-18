@@ -7,7 +7,8 @@ import random
 client_thread_num = 100
 # 服务器的IP地址或主机名
 # serverName = '127.0.0.1'
-serverName = '47.120.5.208'
+# serverName = '47.120.5.208'
+serverName = '192.168.118.128'
 # 服务器端口号
 serverPort = 12000
 
@@ -30,8 +31,9 @@ def send(data):
         clientSocket.sendall(data.encode())
         # 服务器处理完所有数据，并响应，否则一直阻塞在这里
         ret_msg = clientSocket.recv(1024).decode()
+        # 检测传输的消息是否正常
         if ret_msg != data.upper():
-            print("服务器运行错误")
+            print('err ' + ret_msg)
         # 关闭socket
         clientSocket.close()
     except Exception as e:
