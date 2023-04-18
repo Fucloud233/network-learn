@@ -4,14 +4,18 @@ import time
 import random
 
 # 总共10个线程
-client_thread_num = 5000
+client_thread_num = 100
 # 服务器的IP地址或主机名
-serverName = '127.0.0.1'
+# serverName = '192.168.118.128'
+serverName = 'localhost'
 # 服务器端口号
 serverPort = 12000
 
 done_num = 0
 done_mutex = threading.Lock()
+
+# 随意定义一些数据，用于发送
+data = 'q8e7777773yr387yrx12yeemxhy120xn120ye817mexh12emh812h345435435v45v4v43v4v433v4435v3m'
 
 # 发送函数
 def send(data, thread_i):
@@ -26,15 +30,19 @@ def send(data, thread_i):
                     break
                 except Exception as e:
                     pass
-            clientSocket.setsockopt(SOL_SOCKET, SO_REUSEPORT, 1)
+            # 设置socket选项 
+            clientSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
             clientSocket.connect((serverName, serverPort))
             clientSocket.sendall(data.encode())
-            clientSocket.recv(1024)
+            ret_msg = clientSocket.recv(1024).decode()
+            # 检测传输的消息是否正常
+            if ret_msg != data.upper():
+                print('err ' + ret_msg)
 
             done_mutex.acquire()
             done_num += 1
             done_mutex.release()
-            print(done_num)
+            # print(done_num)
             break
         except Exception as e:
             # print(e)
@@ -43,8 +51,6 @@ def send(data, thread_i):
             clientSocket.close()
 
 if __name__ == '__main__':
-    # 随意定义一些数据，用于发送
-    data = 'q8e7777773yr387yrx12yeemxhy120xn120ye817mexh12emh812h345435435v45v4v43v4v433v4435v3m'
     thread_list = []
     # 创建线程
     for i in range(client_thread_num):
