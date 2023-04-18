@@ -17,7 +17,7 @@ def singlethreading_server_BIO(ip: str, port: int):
             data = conn.recv(1024).decode()
             # print(data)
             # 服务器发送响应，代表本次的数据结束了
-            conn.sendall('over'.encode())
+            conn.sendall(data.upper().encode())
             # 连接关闭
             conn.close()
         except Exception as e:
