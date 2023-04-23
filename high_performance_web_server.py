@@ -13,6 +13,8 @@ def thread_func(conn) -> None:
 def multithreading_server_BIO(ip: str, port: int):
     # 创建服务器套接字，使用IPv4协议，TCP协议
     serverSocket = socket(AF_INET, SOCK_STREAM)
+    # 重复使用绑定的信息
+    serverSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     # 绑定端口号和套接字
     serverSocket.bind((ip, port))
     # 开启监听，设置1024个连接缓冲，暂时将连接挂起

@@ -9,7 +9,8 @@ def main():
     server_socket.bind(('', 12000))
     server_socket.listen(1024) 
     server_socket.setblocking(False)
-
+    # 重复使用绑定的信息
+    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     # 将服务器套接字加入等待读就绪的套接字列表
     inputs = [server_socket]   
     outputs = []
@@ -21,7 +22,6 @@ def main():
     while True:
         # 调用select()函数，阻塞等待      
         readable, writable, _ = select.select(inputs, outputs, exception)
-        print(len(readable))
         # 数据抵达，循环
         for temp_socket in readable:
             # 监听到有新的连接
