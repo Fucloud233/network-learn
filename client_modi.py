@@ -6,8 +6,8 @@ import random
 # 总共10个线程
 client_thread_num = 100
 # 服务器的IP地址或主机名
-# serverName = '192.168.118.128'
-serverName = 'localhost'
+serverName = '192.168.118.128'
+# serverName = 'localhost'
 # 服务器端口号
 serverPort = 12000
 
@@ -56,6 +56,9 @@ if __name__ == '__main__':
     for i in range(client_thread_num):
         t = threading.Thread(target=send, args=(data, i))
         thread_list.append(t)
+    
+    # 等待线程运行，并计时
+    time_start = time.time_ns()
 
     # 启动线程
     for t in thread_list:
@@ -66,8 +69,6 @@ if __name__ == '__main__':
             except Exception as e:
                 pass
 
-    # 等待线程运行，并计时
-    time_start = time.time_ns()
     for t in thread_list:
         t.join()
     time_end = time.time_ns()
