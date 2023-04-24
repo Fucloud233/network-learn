@@ -5,6 +5,8 @@ def singlethreading_server_BIO(ip: str, port: str):
     serverSocket = socket(AF_INET, SOCK_STREAM)
     # 绑定端口号和套接字
     serverSocket.bind(("", 12000))
+    # 重复使用绑定的信息
+    serverSocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
     # 设置等待连接为非阻塞
     serverSocket.setblocking(False)
     # 开启监听，设置x个连接缓冲
